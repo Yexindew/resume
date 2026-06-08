@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>与 AI 协作的方式 — 王业欣</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --green: #5aaa80;
+  --green-light: #e8f5ee;
+  --green-mid: #4a9970;
+  --green-pale: #f0f8f4;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7a7a;
+  --text-faint: #9a9a9a;
+  --bg: #f6f5f3;
+  --border: #e8e5e0;
+  --border-light: #eeebe6;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 返回按钮 ── */
+.back-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(246, 245, 243, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+  letter-spacing: 0.1px;
+}
+.back-btn:hover { color: var(--green-mid); }
+.back-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* ── 主体布局 ── */
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 96px 20px 100px;
+}
+
+/* ── 文章头部 ── */
+.article-header {
+  margin-bottom: 52px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--border);
+}
+
+.article-tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 18px;
+}
+
+.article-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+}
+
+.article-subtitle {
+  font-size: 15.5px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 22px;
+  font-size: 12.5px;
+  color: var(--text-faint);
+}
+.article-meta .dot {
+  width: 3px;
+  height: 3px;
+  background: #c8c4bc;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── 正文 ── */
+.article-body {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+
+.article-body p {
+  margin-bottom: 22px;
+}
+.article-body p:last-child { margin-bottom: 0; }
+
+/* ── 章节 ── */
+.part {
+  margin-bottom: 40px;
+}
+
+.part-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  margin-bottom: 24px;
+  padding-left: 16px;
+  border-left: 4px solid var(--green-mid);
+}
+
+.part-num {
+  display: inline-block;
+  color: #2e7d52;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.part-num--red {
+  color: #a84030;
+}
+
+.part-num--neutral {
+  color: #6e6a65;
+}
+
+.part-label--red {
+  border-left-color: #c96a42;
+}
+
+.part-label--neutral {
+  border-left-color: #a09890;
+}
+
+.part-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+}
+
+/* ── 小节标题 ── */
+.sub-heading {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.2px;
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+/* ── 洞察框 ── */
+.insight {
+  background: var(--green-pale);
+  border-left: 3px solid var(--green);
+  border-radius: 0 8px 8px 0;
+  padding: 18px 22px;
+  margin: 32px 0;
+  font-size: 14.5px;
+  color: var(--text-secondary);
+  line-height: 1.85;
+}
+.insight strong {
+  color: var(--green-mid);
+  font-weight: 600;
+}
+
+/* ── 引言 ── */
+.pull-quote {
+  text-align: center;
+  padding: 28px 24px;
+  margin: 32px 0;
+}
+.pull-quote .quote-text {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.6;
+  letter-spacing: -0.2px;
+}
+.pull-quote .quote-text .accent { color: var(--green); }
+
+/* ── 图片错位叠放 ── */
+.img-pair {
+  position: relative;
+  margin: 40px 0 24px;
+  height: 480px;
+}
+
+.img-link {
+  display: block;
+  cursor: zoom-in;
+}
+.img-link:hover img {
+  opacity: 0.9;
+  transition: opacity 0.15s;
+}
+
+.img-pair-item {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+  position: absolute;
+}
+
+/* 左图：手机截图，完整显示，同比例缩小 */
+.img-pair-item:first-child {
+  width: 38%;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.img-pair-item:first-child img {
+  width: 100%;
+  display: block;
+}
+
+/* 右图：平台截图，错位向右下偏移 */
+.img-pair-item:last-child {
+  width: 62%;
+  right: 0;
+  top: 48px;
+  z-index: 2;
+}
+
+.img-pair-item:last-child img {
+  width: 100%;
+  display: block;
+}
+
+.img-pair-caption {
+  font-size: 11px;
+  color: var(--text-faint);
+  text-align: center;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-light);
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .img-pair {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .img-pair-item {
+    position: static;
+    width: 100% !important;
+  }
+  .img-pair-item img {
+    max-height: none !important;
+  }
+}
+
+/* ── 经验卡片 ── */
+.lesson-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 28px 0;
+}
+
+.lesson-item {
+  display: block;
+}
+
+.lesson-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--green-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.lesson-icon svg {
+  width: 15px;
+  height: 15px;
+  stroke: var(--green-mid);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lesson-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.lesson-desc {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+/* ── 行内高亮 ── */
+.hl {
+  color: var(--green-mid);
+  font-weight: 600;
+}
+
+/* ── 代码感标签 ── */
+.code-tag {
+  display: inline-block;
+  font-family: "SF Mono", "Fira Code", monospace;
+  font-size: 12px;
+  background: #f0ede8;
+  color: #5a5550;
+  border-radius: 4px;
+  padding: 1px 7px;
+  letter-spacing: 0;
+}
+
+/* ── 角色卡片 ── */
+.role-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 24px 0;
+}
+
+.role-card {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 18px 16px;
+}
+
+.role-card-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.role-card-tag {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--green-mid);
+  background: var(--green-light);
+  border-radius: 4px;
+  padding: 2px 7px;
+  margin-bottom: 10px;
+}
+
+.role-card-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ── 流程图 ── */
+.flow-diagram {
+  margin: 28px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.flow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+}
+
+.flow-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 36px;
+  bottom: -16px;
+  width: 1px;
+  background: var(--border);
+}
+
+.flow-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--green);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green-mid);
+  margin-top: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.flow-content {
+  padding-bottom: 28px;
+  flex: 1;
+}
+
+.flow-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+.flow-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+/* ── 分隔线 ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 40px 0;
+}
+
+/* ── 结尾 ── */
+.ending-text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.9;
+  margin-bottom: 22px;
+}
+
+/* ── 参考文献 ── */
+.references {
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.references-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 20px;
+}
+
+.ref-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  align-items: baseline;
+}
+
+.ref-num {
+  font-size: 11px;
+  color: var(--text-faint);
+  flex-shrink: 0;
+  width: 18px;
+  padding-top: 1px;
+}
+
+.ref-body {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.ref-body a {
+  color: var(--green-mid);
+  text-decoration: none;
+}
+.ref-body a:hover {
+  text-decoration: underline;
+}
+
+/* ── 占位提示 ── */
+.placeholder {
+  background: #f0ede8;
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: #aaa8a3;
+  font-style: italic;
+  margin: 16px 0;
+  border: 1px dashed #ddd9d3;
+}
+
+/* ── 对比表格 ── */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 12.5px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.compare-table th {
+  background: var(--green-pale);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 7px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-table th:first-child {
+  color: var(--text-muted);
+  font-weight: 500;
+  background: #f3f1ee;
+}
+
+.compare-table td {
+  padding: 7px 14px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+  line-height: 1.6;
+}
+
+.compare-table tr:last-child td {
+  border-bottom: none;
+}
+
+.compare-table td:first-child {
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  background: #faf9f7;
+}
+
+.compare-table tr:hover td {
+  background: #faf9f7;
+}
+.compare-table tr:hover td:first-child {
+  background: #f5f3f0;
+}
+
+/* ── 困境标记 ── */
+.dilemma-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #b85c38;
+  background: #fdf0eb;
+  border-radius: 5px;
+  padding: 3px 10px;
+  margin-bottom: 14px;
+}
+
+/* ── 响应式 ── */
+@media (max-width: 600px) {
+  .back-bar { padding: 0 20px; }
+  .page { padding: 80px 20px 80px; }
+  .article-title { font-size: 24px; }
+  .role-cards { grid-template-columns: 1fr; }
+  .pull-quote .quote-text { font-size: 17px; }
+  .img-pair { grid-template-columns: 1fr; }
+  .compare-table { font-size: 12px; }
+  .compare-table td, .compare-table th { padding: 9px 12px; }
+}
+
+/* ── AI 员工卡片 ── */
+.ai-crew {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 32px 0;
+}
+
+.ai-crew-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.ai-crew-avatar-wrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--border-light);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+
+.ai-crew-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.15);
+  display: block;
+}
+
+.ai-crew-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ai-crew-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── 场景双图（重叠版） ── */
+.scene-block {
+  margin: 36px 0 28px;
+  position: relative;
+  padding-top: 62px;
+}
+
+.scene-overlap {
+  position: relative;
+  height: 360px;
+  margin: 0;
+}
+
+/* 左大图（桌面截图）：铺满左侧 */
+.scene-img-back {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 74%;
+  z-index: 1;
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+  border: 1px solid var(--border-light);
+  background: #fff;
+}
+.scene-img-back img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  height: 340px;
+}
+
+/* 右小图（手机截图）：叠压在大图右侧上方，向左偏移形成重叠 */
+.scene-img-front {
+  position: absolute;
+  right: 0;
+  top: 24px;
+  width: 30%;
+  z-index: 2;
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 32px rgba(0,0,0,0.18);
+  border: 2px solid #fff;
+  background: #fff;
+  /* 向左偏移，与大图产生重叠 */
+  transform: translateX(-28px);
+}
+.scene-img-front img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: top;
+  height: 310px;
+}
+
+/* ── 对话气泡：悬浮在图片上方，带尖角指向对应图片 ── */
+.scene-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 10px;
+  padding: 7px 14px 7px 11px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+  position: absolute;
+  z-index: 4;
+  white-space: nowrap;
+}
+.bubble-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* 左气泡：悬在大图左上方，尖角朝下指向大图 */
+.scene-bubble--left {
+  top: -46px;
+  left: 24px;
+}
+/* 边框色三角（底层）— 尖角在气泡右侧，指向大图中心 */
+.scene-bubble--left::before {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  right: 22px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 12px solid rgba(0,0,0,0.12);
+}
+/* 白色三角（上层） */
+.scene-bubble--left::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: 23px;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 11px solid #fff;
+}
+
+/* 右气泡：悬在小图右上方，尖角朝下指向小图 */
+.scene-bubble--right {
+  top: -46px;
+  right: 24px;
+}
+/* 边框色三角（底层）— 尖角在气泡左侧，指向小图中心 */
+.scene-bubble--right::before {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 22px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 12px solid rgba(0,0,0,0.12);
+}
+/* 白色三角（上层） */
+.scene-bubble--right::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 23px;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 11px solid #fff;
+}
+
+@media (max-width: 600px) {
+  .scene-overlap { height: auto; display: flex; flex-direction: column; gap: 14px; }
+  .scene-img-back, .scene-img-front { position: static; width: 100%; transform: none; }
+  .scene-img-back img, .scene-img-front img { height: auto; }
+  .scene-bubble { position: static; display: inline-flex; margin: 8px 0; border-radius: 20px; }
+  .scene-bubble::after { display: none; }
+  .scene-bubble--right { float: right; }
+}
+
+/* ── 延展结尾 ── */
+.explore-ending {
+  font-size: 14.5px;
+  color: var(--text-muted);
+  line-height: 1.9;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .ai-crew { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .ai-crew-avatar { width: 64px; height: 64px; }
+  .scene-pair { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- 返回按钮 -->
+<div class="back-bar">
+  <a class="back-btn" href="index.html">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    返回简历
+  </a>
+</div>
+
+<div class="page">
+
+  <!-- 文章头部 -->
+  <div class="article-header">
+    <div class="article-tag">Writing · AI 协作</div>
+    <h1 class="article-title">与 AI 协作做全栈：我在哪里，AI 在哪里</h1>
+    <div class="article-meta">
+      <span>王业欣</span>
+      <span class="dot"></span>
+      <span>2026.05</span>
+    </div>
+  </div>
+
+  <!-- 正文 -->
+  <div class="article-body">
+
+    <!-- 引言 -->
+    <p>
+      2025 年初，Vibe Coding 刚开始流行，我就入坑了。写小程序、做业务看板，很快尝到了甜头，越做越想做，整个过程顺滑得像在和一个很懂事的助手对话。
+    </p>
+    <p>
+      但顺滑是有边界的。随着我想做的东西越来越复杂，涉及前后端交互、或者功能逻辑稍微绕一点，那种顺滑开始变得粗糙。报错越来越多，调试越来越久。<span class="hl">我意识到，我可能触碰到了 Vibe Coding 的边界：它能帮你快速起步，但它不是为复杂系统设计的。</span>
+    </p>
+    <p>
+      几天后看到 Karpathy 的演讲：<em>From Vibe Coding to Agentic Engineering</em>，我决定往前走一步，尝试 AI Coding Agents。这类工具，比如 Claude Code，能在代码库里持续工作、跨文件理解上下文、处理真实的工程复杂度。恰好这时候，美团平台有一个 PDE 闯关挑战赛，用的正是 CatPaw 和 Claude Code。这是一个很好的机会，我想借它实践一下：做一个真实的全栈应用。
+    </p>
+
+    <div class="pull-quote">
+      <div class="quote-text">
+        AI 最不擅长的，恰好是协作里最重要的：<br>
+        知道终点在哪，知道走偏了，知道够不够好。<br>
+        <span class="accent">而围绕这三件事，我踩了不少坑。</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 背景：PDE 闯关 -->
+    <div class="part">
+      <div class="part-label">
+        <div class="part-num">背景</div>
+        <div class="part-title">PDE 全栈闯关挑战赛</div>
+      </div>
+
+      <p>
+        PDE（Product Design Engineer）闯关是一个鼓励习得全栈开发能力的项目。闯关平台做成了游戏地图的样子，七个关卡依次解锁，从环境安装、前后端联调到最终部署上线。<span class="hl">整个过程有点像打游戏，但写的每一行代码，都是真实跑起来的。</span>
+      </p>
+
+      <!-- 图片双栏 -->
+      <div class="img-pair" style="margin-top: 16px;">
+        <div class="img-pair-item">
+          <a class="img-link" data-lightbox="writing-files/running-app-demo.gif" style="cursor:zoom-in;">
+            <img src="writing-files/running-app-demo.gif" alt="跑步地图应用">
+          </a>
+          <div class="img-pair-caption">
+            跑步地图应用 · 点击查看大图<br>
+            <a href="http://ulive-pde-explore-runmapfrontend-wangyexin04qxrxl.awp.sankuai.com/index.html?lane=wangyexin04-qxrxl#/" target="_blank" style="color: var(--green); text-decoration: none; font-size: 11px;">→ 点击体验线上版本</a>
+          </div>
+        </div>
+        <div class="img-pair-item">
+          <a class="img-link" data-lightbox="writing-files/pde-challenge-platform.png" style="cursor:zoom-in;">
+            <img src="writing-files/pde-challenge-platform.png" alt="PDE 闯关平台">
+          </a>
+          <div class="img-pair-caption">PDE 闯关平台 · 7/7 全通 · 点击查看大图</div>
+        </div>
+      </div>
+
+      <!-- Lightbox -->
+      <div id="lightbox" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; cursor:zoom-out;">
+        <button id="lightbox-close" style="position:absolute; top:20px; right:28px; background:none; border:none; color:#fff; font-size:32px; cursor:pointer; line-height:1;">✕</button>
+        <img id="lightbox-img" src="" style="max-width:90vw; max-height:90vh; border-radius:8px; box-shadow:0 8px 40px rgba(0,0,0,0.5);">
+      </div>
+
+      <p>
+        闯关项目是一个跑步地图应用：用户打开，能看到今天的天气适不适合跑步，能搜索附近的公园和绿道，能记录自己跑过的路线。听起来不复杂，但对一个没有接触过全栈开发的人来说，这个过程是全新的。这个过程里，我遇到了一个没有预想到的困境。
+      </p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 困境 -->
+    <div class="part">
+      <div class="part-label part-label--red">
+        <div class="part-num part-num--red">困境</div>
+        <div class="part-title">我一路点 Yes，直到发现已经走进了一个死胡同</div>
+      </div>
+
+      <p>
+        在跟 Agent 对话时，每一步都会让我来确认，这种节奏很容易让人产生一种安全感，每一步我都看过了，应该没问题。但走到中段才发现理解有偏差。
+      </p>
+      <p>
+        我意识到，在复杂系统里，<span class="hl">局部正确不等于整体正确</span>，每一步看起来合理，但方向本身可能从一开始就有偏差，只是在足够多的层叠之后才会暴露出来，于是有了下面的三条教训：
+      </p>
+
+      <div class="lesson-list">
+
+        <div class="lesson-item">
+          <div class="lesson-content">
+            <div class="lesson-title">沉淀规则到 .md，让每次对话都从共识出发</div>
+            <div class="lesson-desc">
+              对于多功能嵌套的复杂需求，一次性把所有需求塞给它，它很容易在某些地方立刻出现偏差。更好的方式是把需求拆成多个模块，用 <span class="code-tag">requirements.md</span> 维护需求准则，并沉淀每次运行出错后的错误规则：这些文件作为每次新对话的上下文注入，既解决了上下文窗口不够长的问题，也避免了重复纠偏的成本。
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item">
+          <div class="lesson-content">
+            <div class="lesson-title">每一步结束后，引入多个 Agent 角色交叉验证</div>
+            <div class="lesson-desc">
+              不能让一个 Agent 走完全程。在每个模块完成后，引入不同角色的 Agent 来挑战和判决：需求合规审核者、代码审核者、集成验证者同时工作，<span class="hl">责任隔离、引入外部视角，确认完全正确之后再推进下一步。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item">
+          <div class="lesson-content">
+            <div class="lesson-title">报错时给精确引用，不给模糊描述</div>
+            <div class="lesson-desc">
+              开发过程中排查报错会占很大的时间比重。把完整的错误接口、日志文件给它，和说"页面白屏"，得到的结果完全不同。<span class="hl">它不擅长在模糊中找方向，但在精确的上下文里，它非常可靠。</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Prompt 心得 -->
+    <div class="part">
+      <div class="part-label">
+        <div class="part-num">心得</div>
+        <div class="part-title">让 AI 精准理解你的意图</div>
+      </div>
+
+      <p>
+        在整个协作过程中，你一直在跟 AI 对话。沟通本身就是工作的一部分，越做越觉得，<span class="hl">AI 就是一面镜子，它的输出会精准映照你的输入。</span>这里有两个 Prompt 技巧，是我在实践中最受用的。
+      </p>
+
+      <div class="lesson-list">
+
+        <div class="lesson-item">
+          <div class="lesson-content">
+            <div class="lesson-title">多给负向约束，少给正向要求</div>
+            <div class="lesson-desc">
+              与其说"要考虑边界情况"，不如说"禁止在没有处理空数据的情况下返回列表"。负向约束比正向要求更精确，它直接排除了你最不想看到的结果，而不是让 AI 去猜你心目中"好"的标准是什么。
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-item">
+          <div class="lesson-content">
+            <div class="lesson-title">多说处境，少给标签</div>
+            <div class="lesson-desc">
+              不要只给一个身份标签，而是给一个具体的处境。不是"我是一个产品经理"，而是"我正在向一个从来没用过这个功能的新用户解释，她有点不耐烦，时间只有两分钟"。
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 对比表格 -->
+    <div class="part">
+      <div class="part-label part-label--neutral">
+        <div class="part-num part-num--neutral">总结</div>
+        <div class="part-title">Vibe Coding 与 AI Coding Agents 的边界</div>
+      </div>
+
+      <p>
+        通过这次经历，我也更清楚地感受到了 Vibe Coding 和 AI Coding Agents 之间的边界，他们有属于各自适配的场景。
+      </p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>判断维度</th>
+            <th>Vibe Coding</th>
+            <th>AI Coding Agents</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>代表工具</td>
+            <td>Nocode</td>
+            <td>Claude Code、Codex</td>
+          </tr>
+          <tr>
+            <td>数据依赖</td>
+            <td>简单读写</td>
+            <td>多表关联 / 实时同步</td>
+          </tr>
+          <tr>
+            <td>交互复杂度</td>
+            <td>低（如看板展示）</td>
+            <td>高（如涉及状态机）</td>
+          </tr>
+          <tr>
+            <td>迭代频率</td>
+            <td>低</td>
+            <td>高</td>
+          </tr>
+          <tr>
+            <td>产品形态</td>
+            <td>短期</td>
+            <td>长期维护</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 结尾 -->
+    <div class="ending">
+      <p class="ending-text">
+        这次闯关让我用游戏化的方式真正摸到了开发的边界，也在 AI 协作上积累了一些新的直觉。于是我主动参与到 PDE 项目的共建中，负责"项目广场"模块的开发，一个让更多同学能看到彼此作品的地方。这次不再是跟着关卡走，而是自己定义需求、自己和 AI 协商路径。项目广场的初衷，是希望它成为一个入口，让更多人有机会加入进来。
+      </p>
+      <p class="ending-text">
+        如果要总结这段经历：知道终点在哪，知道走偏了，知道够不够好。<span class="hl">这三件事，AI 做不到，但你可以。</span>
+      </p>
+    </div>
+
+    <!-- 延展：探索 -->
+    <div class="divider"></div>
+
+    <div class="part">
+      <div class="part-label part-label--neutral">
+        <div class="part-num part-num--neutral">延展</div>
+        <div class="part-title">延展与探索</div>
+      </div>
+
+      <p>
+        在这个项目之后，我雇佣了三个 AI 同事作为我的日常搭子，跟我讨论新项目的点子，互相挑战打磨想法。
+      </p>
+
+      <!-- 三个 AI 员工 -->
+      <div class="ai-crew">
+        <div class="ai-crew-card">
+          <div class="ai-crew-avatar-wrap"><img class="ai-crew-avatar" src="writing-files/avatar_ethan.png" alt="Ethan" style="object-position: center 15%;"></div>
+          <div class="ai-crew-name">Ethan</div>
+          <div class="ai-crew-desc">擅长挑战、辩论、逆向推理</div>
+        </div>
+        <div class="ai-crew-card">
+          <div class="ai-crew-avatar-wrap"><img class="ai-crew-avatar" src="writing-files/avatar_will.png" alt="Will"></div>
+          <div class="ai-crew-name">Will</div>
+          <div class="ai-crew-desc">擅长理论、历史、精确描述</div>
+        </div>
+        <div class="ai-crew-card">
+          <div class="ai-crew-avatar-wrap"><img class="ai-crew-avatar" src="writing-files/avatar_zoe.png" alt="Zoe"></div>
+          <div class="ai-crew-name">Zoe</div>
+          <div class="ai-crew-desc">擅长突破想象力边界</div>
+        </div>
+      </div>
+
+      <!-- 两个场景 -->
+      <!-- 场景：项目广场讨论 + 英语会话，重叠布局 -->
+      <div class="scene-block">
+        <div class="scene-overlap">
+          <a class="img-link scene-img-back" data-lightbox="writing-files/collab-project-square.png" style="cursor:zoom-in;">
+            <img src="writing-files/collab-project-square.png" alt="讨论项目广场设计思路">
+          </a>
+          <a class="img-link scene-img-front" data-lightbox="writing-files/collab-english-chat.jpg" style="cursor:zoom-in;">
+            <img src="writing-files/collab-english-chat.jpg" alt="练习英语会话">
+          </a>
+          <!-- 气泡浮在图片上 -->
+          <div class="scene-bubble scene-bubble--left"><span class="bubble-dot"></span>讨论项目广场设计思路</div>
+          <div class="scene-bubble scene-bubble--right"><span class="bubble-dot"></span>练习英语会话</div>
+        </div>
+      </div>
+
+      <!-- 结尾 -->
+      <p class="explore-ending">
+        这只是开始。每一次对话都是一次新的实验，每一个想法都值得被认真挑战。我想继续做下去。
+      </p>
+
+    </div>
+
+    <!-- 参考文献 -->
+    <div class="references">
+      <div class="references-title">参考文献</div>
+
+      <div class="ref-item">
+        <div class="ref-num">01</div>
+        <div class="ref-body">
+          基于人格建模的多 Agent 评估框架：<em>Debate, Deliberate, Decide (D3): A Cost-Aware Adversarial Framework for Reliable and Interpretable LLM Evaluation</em>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">02</div>
+        <div class="ref-body">
+          LLM 多智能体系统中的创造力分析：<em>Creativity in LLM-based Multi-Agent Systems: A Survey</em>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">03</div>
+        <div class="ref-body">
+          Karpathy 演讲：<em>From Vibe Coding to Agentic Engineering</em>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">04</div>
+        <div class="ref-body">
+          OpenAI 关于 Harness Engineering 的实践报告：<a href="https://openai.com/index/harness-engineering/" target="_blank">openai.com/index/harness-engineering</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="lightbox.js" defer></script>
+<script src="annotations.js"></script>
+</body>
+</html>
