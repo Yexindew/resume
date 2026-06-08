@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>王业欣</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  background: #f6f5f3;
+  color: #2d2d2d;
+  line-height: 1.7;
+  padding: 48px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ── 顶部个人信息 ── */
+.profile {
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid #e8e5e0;
+}
+
+.profile-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+}
+
+.profile-sub {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #7a7a7a;
+  margin-bottom: 14px;
+}
+
+.profile-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 13px;
+  color: #8a8a8a;
+}
+
+.profile-meta span:last-child {
+  color: #aaaaaa;
+  font-size: 12.5px;
+}
+
+.profile-meta span::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background: #c8c4bc;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 6px;
+  margin-bottom: 1px;
+}
+
+/* ── Section ── */
+.section {
+  margin-bottom: 36px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #5aaa80;
+  margin-bottom: 22px;
+}
+
+/* ── 分隔线 ── */
+.divider {
+  height: 1px;
+  background: #e8e5e0;
+  margin-top: 4px;
+  margin-bottom: 48px;
+}
+
+/* ── 工作经历 ── */
+.exp-item {
+  margin-bottom: 34px;
+  padding-bottom: 34px;
+  border-bottom: 1px solid #eeebe6;
+}
+.exp-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.exp-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.exp-company {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* 绿色时间文字 */
+.exp-period {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #4a9970;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
+}
+
+.exp-role {
+  font-size: 12.5px;
+  color: #7a7a7a;
+  margin-bottom: 12px;
+}
+
+.exp-bullets {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.exp-bullets li {
+  font-size: 13.5px;
+  color: #4a4a4a;
+  line-height: 1.8;
+  padding-left: 14px;
+  position: relative;
+}
+
+.exp-bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 4px;
+  height: 4px;
+  background: #d0ccc5;
+  border-radius: 50%;
+}
+
+.exp-bullets li strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* ── 教育 ── */
+.edu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.edu-item:last-child { margin-bottom: 0; }
+
+.edu-school {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 2px;
+}
+.edu-degree {
+  font-size: 13px;
+  color: #4a4a4a;
+}
+.edu-note {
+  font-size: 12px;
+  color: #7a7a7a;
+  margin-top: 3px;
+}
+.edu-period {
+  font-size: 12px;
+  color: #8a8a8a;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Writing ── */
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blog-link {
+  font-size: 13.5px;
+  color: #2d2d2d;
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  transition: color 0.15s;
+}
+.blog-link::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background: #c8c4bc;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+.blog-link:hover { color: #5aaa80; }
+.blog-link::after {
+  content: ' ↗';
+  font-size: 11px;
+  opacity: 0.5;
+  vertical-align: middle;
+}
+.blog-desc {
+  font-size: 11.5px;
+  color: #9a9a9a;
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 600px) {
+  body { padding: 32px 20px 48px; }
+  .exp-top { flex-wrap: wrap; }
+  .edu-item { flex-direction: column; gap: 2px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- 个人信息 -->
+  <div class="profile">
+    <div class="profile-name">王业欣</div>
+
+    <div class="profile-sub">AI 产品与体验策略，从智能应用 0-1 设计到海外市场落地，再到体验运营全链路</div>
+    <div class="profile-meta">
+      <span>北京</span>
+      <span>7 年+经验</span>
+      <span>4 年海外学习与工作经历</span>
+    </div>
+  </div>
+
+  <!-- 工作经历 -->
+  <div class="section">
+    <div class="section-label">Work Experience</div>
+
+    <div class="exp-item">
+      <div class="exp-top">
+        <div class="exp-company">美团 · 核心本地商业 · 体验运营</div>
+        <div class="exp-period">2025.09 — 至今 · 北京</div>
+      </div>
+      <ul class="exp-bullets">
+        <li><strong>体验管理机制建设</strong> — 负责美团平台交易履约体验管理，覆盖正逆向全链路；通过商家走访与数据分析诊断根因，协同产研推动改善，统筹客服资源优化服务流程；重点推进智能点餐（高速增长新业务）的体验治理，客诉服务率较峰值<strong>下降 50%+</strong></li>
+        <li><strong>AI 工具落地与提效</strong> — 主导体验问题诊断流程 AI 改造，报告产出从 2 天压缩至 <strong>1 小时</strong>；推动 AI 搭流程 TT 流转在交易和结算两个场景的落地，Q2 客诉流转比率环比下降 <strong>5%</strong>；参与大模型事件体系建设，通过全维度监控、LLM Badcase 闭环，持续迭代事件定义流程，问题分类准确性从 60% 提升至 <strong>94%</strong></li>
+        <li><strong>全栈实践与 AI 协作探索</strong> — 参与 PDE 闯关挑战赛共建（3K+ 人参与的全栈开发平台），主导项目广场功能全栈开发，将 AI Coding Agent 引入非研发职能工作流；持续探索 AI 工具的应用边界，沉淀人机协作经验</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-top">
+        <div class="exp-company">字节跳动 · 火山引擎 · 产品设计</div>
+        <div class="exp-period">2021.02 — 2025.09 · 北京</div>
+      </div>
+      <ul class="exp-bullets">
+        <li><strong>AI 云产品矩阵 0-1 设计</strong> — 自成立初期加入，主导火山 AI 云服务平台 <strong>10+ 款</strong>产品和工具从零到一的搭建，涵盖云存储、智能数据洞察 DataWind、火山智能助手等，成为火山引擎对外核心产品矩阵</li>
+        <li><strong>B/C 端 AI 产品体验优化</strong> — 主导火山 B 端客户画像建设，深挖企业 AI 上云痛点，推动上云转化率 <strong>+20%</strong>；优化 C 端智能体平台扣子核心链路，解决跨场景流程卡点，调试与发布效率提升 <strong>8%</strong></li>
+        <li><strong>BytePlus 出海接口负责人</strong> — 横向拉通产研、运营、合规、法务等 8 个跨职能团队，主导国际化体验标准建立与商业化流程落地；推动 BytePlus <strong>3 个月内</strong>完成海外市场的落地，支持 <strong>40 款</strong>云产品完成海外版上线，并深度参与新加坡、北美市场的用户研究与本地化策略制定，助力商业化落地</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-top">
+        <div class="exp-company">海外产品设计经历</div>
+        <div class="exp-period">2019.01 — 2021.01 · 波士顿 / 旧金山</div>
+      </div>
+      <ul class="exp-bullets">
+        <li><strong>Elevation Education</strong>（波士顿）— 负责语言学习平台功能搭建与流程优化，重构课程交互流程，30 天留存率 <strong>+18%</strong>；同期主导用户研究，洞察反哺平台播客内容策划</li>
+        <li><strong>Ten-X Commercial</strong>（旧金山）— 负责北美商业地产平台交易链路设计和优化，覆盖买家、卖家、平台三类角色的全链路设计，深度参与用户研究、交互流程和视觉设计</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 教育背景 -->
+  <div class="section">
+    <div class="section-label">Education</div>
+
+    <div class="edu-item">
+      <div class="edu-left">
+        <div class="edu-school">Purdue University</div>
+        <div class="edu-degree">人机交互 HCI 硕士</div>
+        <div class="edu-note">Top 5 HCI 项目（US News 2018）· 定性定量数据分析、设计心理、人因工程、计算机基础</div>
+      </div>
+      <div class="edu-period">2016 — 2018 · 美国西拉法叶</div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-left">
+        <div class="edu-school">华中科技大学</div>
+        <div class="edu-degree">建筑学 本科</div>
+        <div class="edu-note">直向建筑事务所实习 · 长周期项目管理与设计实践积累</div>
+      </div>
+      <div class="edu-period">2011 — 2016 · 中国武汉</div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Writing -->
+  <div class="section">
+    <div class="section-label">Writing</div>
+    <div class="blog-desc">近期关于 AI 协作方式与体验的思考</div>
+    <div class="blog-list">
+      <a class="blog-link" href="https://s3plus-bj02.vip.sankuai.com/openclaw/pde/writing-ai-collab.html" target="_blank">与 AI 协作做全栈：我在哪里，AI 在哪里</a>
+      <a class="blog-link" href="https://s3plus-bj02.vip.sankuai.com/openclaw/pde/writing-experience.html" target="_blank">如今当我们说"体验不好"，我们在说哪一层的事</a>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
